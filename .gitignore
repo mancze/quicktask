@@ -6,3 +6,4 @@ log/*
 temp/*
 vendor/*
 www/bower-plugins/*
+/app/config/*.local.neon
