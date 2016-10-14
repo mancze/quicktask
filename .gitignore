@@ -1,6 +1,8 @@
 .idea/*
-temp/*
+/nbproject/
+
 composer.lock
 log/*
+temp/*
 vendor/*
 www/bower-plugins/*
