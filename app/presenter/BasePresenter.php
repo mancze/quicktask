@@ -9,6 +9,25 @@ use Nette;
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
+    
+    protected function startup()
+    {
+        parent::startup();
+        $this->redrawControl("flashMessages");
+    }
+
+    /**
+     * Saves the message to template, that can be displayed after redirect.
+     * Automatically invalidates the flash messages snippet.
+     * @param  string
+     * @param  string
+     * @return \stdClass
+     */
+    public function flashMessage($message, $type = 'info')
+    {
+        parent::flashMessage($message, $type);
+        $this->redrawControl("flashMessages");
+    }
 
     /**
      * Redirect to another presenter, action or signal unless the request is ajax.

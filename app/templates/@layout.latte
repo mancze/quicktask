@@ -39,11 +39,13 @@
                 </nav>
             </div>
             <div class="col-md-9" role="main">
-                {foreach $flashes as $flash}
-                    <div class="alert alert-{$flash->type}" role="alert">
-                        {$flash->message}
-                    </div>
-                {/foreach}
+                {snippet flashMessages}
+                    {foreach $flashes as $flash}
+                        <div class="alert alert-{$flash->type}" role="alert">
+                            {$flash->message}
+                        </div>
+                    {/foreach}
+                {/snippet}
 
                 {include content}
             </div>
