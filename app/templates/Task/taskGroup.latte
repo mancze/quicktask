@@ -1,35 +1,39 @@
 {block content}
-    {control insertTaskForm}
-    <div class="row">
-        <div class="col-md-12">
-            {snippet tasks}
-                {form taskList}
-                    <!-- Jednoduché vykreslení chyb -->
-                    <ul class="errors" n:if="$form->hasErrors()">
-                        <li n:foreach="$form->errors as $error">{$error}</li>
-                    </ul>
-                    
-                    {formContainer tasks}
-                        <ul class="list-group">
+{control insertTaskForm}
+<div class="row">
+    <div class="col-md-12">
+        {snippet tasks}
+            {form taskList}
+                <!-- Jednoduché vykreslení chyb -->
+                <ul class="errors" n:if="$form->hasErrors()">
+                    <li n:foreach="$form->errors as $error">{$error}</li>
+                </ul>
+
+                {formContainer tasks}
+                    <ul class="list-group">
                         {foreach $formContainer->getComponents() as $taskContainer}
                             {formContainer $taskContainer->getName()}
                                 <li class="list-group-item">
                                     {var $task = $taskContainer["completed"]->getOption("task")}
 
-                                    {input completed:}
-                                    <span>{$task->getName()}</span>
-                                    <span class="label label-info">{$task->getDate()|date:'d.m.Y'}</span>
+                                    <div class="checkbox icheck-primary">
+                                        {input completed:}
+                                        <label for="{$formContainer['completed']->getHtmlId()}">
+                                            <span>{$task->getName()}</span>
+                                            <span class="label label-info">{$task->getDate()|date:'d.m.Y'}</span>
+                                        </label>
+                                    </div>
                                 </li>
                             {/formContainer}
                         {/foreach}
-                        </ul>
-                    {/formContainer}
-                        
-                    {input doSubmit}
-                {/form}
-            {/snippet}
-        </div>
+                    </ul>
+                {/formContainer}
+
+                {input doSubmit}
+            {/form}
+        {/snippet}
     </div>
+</div>
 {/block}
 
 {block scripts}
