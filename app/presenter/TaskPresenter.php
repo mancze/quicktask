@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use Nette\Application\UI\Form;
+use Nette\Utils\Arrays;
 
 /**
  * Class TaskPresenter
@@ -97,7 +98,19 @@ class TaskPresenter extends BasePresenter
 
     protected function processTaskList(Form $form)
     {
-        throw new \Nette\NotImplementedException();
+        $values = $form->getValues(true);
+        
+        foreach ($this->tasks as $task) {
+            $taskValues = Arrays::get($values["tasks"], $task->getId(), null);
+            if (!$taskValues) {
+                continue;
+            }
+            
+            $task->setCompleted($taskValues["completed"]);
+            $this->taskRepository->updateEntity($task);
+        }
+        
+        $this->redirect("this");
     }
 
     protected function createComponentTaskList()
