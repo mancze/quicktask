@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-md-12">
         {snippet tasks}
-            {form taskList}
+            {form taskList class => "ajax"}
                 <!-- Jednoduché vykreslení chyb -->
                 <ul class="errors" n:if="$form->hasErrors()">
                     <li n:foreach="$form->errors as $error">{$error}</li>

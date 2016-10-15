@@ -110,7 +110,8 @@ class TaskPresenter extends BasePresenter
             $this->taskRepository->updateEntity($task);
         }
         
-        $this->redirect("this");
+        $this->redrawControl($form->getName());
+        $this->redirectIfNotAjax("this");
     }
 
     protected function createComponentTaskList()
