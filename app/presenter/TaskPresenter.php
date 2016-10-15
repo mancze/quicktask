@@ -76,7 +76,15 @@ class TaskPresenter extends BasePresenter
     
     protected function onTaskAdded(Control $s, Task $t) {
         $this->flashMessage('Task was created.', 'success');
-        $this->redirect("this");
+        
+        if ($this->isAjax()) {
+            // reload the tasks
+            $this->loadTasks($this->idTaskGroup);
+            $this->redrawControl("tasks");
+        }
+        else {
+            $this->redirect("this");
+        }
     }
 
     /**
@@ -119,8 +127,8 @@ class TaskPresenter extends BasePresenter
             $task->setCompleted($taskValues["completed"]);
             $this->taskRepository->updateEntity($task);
         }
-        
-        $this->redrawControl($form->getName());
+
+        $this->redrawControl("tasks");
         $this->redirectIfNotAjax("this");
     }
 
