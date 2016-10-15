@@ -34,12 +34,14 @@
                             {formContainer $taskContainer->getName()}
                                 <li class="list-group-item">
                                     {var $task = $taskContainer["completed"]->getOption("task")}
-
+                                    {var $category = $task->getTaskCategory()}
+                                    
                                     <div class="checkbox icheck-primary">
                                         {input completed:}
                                         <label for="{$formContainer['completed']->getHtmlId()}">
                                             <span>{$task->getName()}</span>
                                             <span class="label label-info">{$task->getDate()|date:'d.m.Y'}</span>
+                                            <span>{if $category}{$category->getName()}{/if}</span>
                                         </label>
                                     </div>
                                 </li>
