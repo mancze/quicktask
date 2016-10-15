@@ -35,6 +35,23 @@ class TaskRepository extends AbstractRepository
     }
 
     /**
+     * @param number $idTaskGroup
+     * @param array|null $orderBy Optional ORDER BY specifier.
+     * @return Entity\Task[]
+     */
+    public function getByTaskGroupAndName($idTaskGroup, $name, array $orderBy = null)
+    {
+        $builder = $this->task->createQueryBuilder("t")
+            ->where("t.taskGroup = :taskGroup")
+            ->andWhere("LOWER(t.name) LIKE LOWER(:query)")
+            ->autoJoinOrderBy($orderBy)
+            ->setParameter("taskGroup", $idTaskGroup)
+            ->setParameter("query", "%" . $name . "%");
+        
+        return $builder->getQuery()->getResult();
+    }
+
+    /**
      * @param Entity\Task $task
      */
     public function insert(Entity\Task $task)

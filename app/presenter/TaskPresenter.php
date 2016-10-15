@@ -23,6 +23,8 @@ class TaskPresenter extends BasePresenter
     public $insertTaskFactory;
     /** @var number */
     protected $idTaskGroup;
+    /** @var string */
+    protected $query;
     /** @var Task[] */
     protected $tasks;
 
@@ -46,10 +48,13 @@ class TaskPresenter extends BasePresenter
 
     /**
      * @param number $idTaskGroup
+     * @param string $query Optional search query
      */
-    public function actionTaskGroup($idTaskGroup)
+    public function actionTaskGroup($idTaskGroup, $query = null)
     {
-        $this->loadTasks($idTaskGroup);
+        $this->idTaskGroup = $idTaskGroup;
+        $this->query = $query;
+        $this->loadTasks();
     }
 
     /**
@@ -79,7 +84,7 @@ class TaskPresenter extends BasePresenter
         
         if ($this->isAjax()) {
             // reload the tasks
-            $this->loadTasks($this->idTaskGroup);
+            $this->loadTasks();
             $this->redrawControl("tasks");
         }
         else {
@@ -105,13 +110,14 @@ class TaskPresenter extends BasePresenter
 
     /**
      * Loads the list of tasks for given group.
-     * @param number $idTaskGroup
      * @return void
      */
-    protected function loadTasks($idTaskGroup)
+    protected function loadTasks()
     {
-        $this->idTaskGroup = $idTaskGroup;
-        $this->tasks = $this->taskRepository->getByTaskGroup($idTaskGroup, array("date" => "DESC"));
+        $orderBy = array("date" => "DESC");
+        $this->tasks = $this->query ? 
+            $this->taskRepository->getByTaskGroupAndName($this->idTaskGroup, $this->query, $orderBy) :
+            $this->taskRepository->getByTaskGroup($this->idTaskGroup, $orderBy);
     }
 
     protected function processTaskList(Form $form)
@@ -150,5 +156,29 @@ class TaskPresenter extends BasePresenter
         $form->onSuccess[] = function($f) { $this->processTaskList($f); };
 
         return $form;
+    }
+    
+    protected function createComponentSearchTask()
+    {
+        $form = new Form();
+        $form->addText("query", "Search")
+            ->setDefaultValue($this->query);
+        
+        $form->addSubmit("doSubmit", "Search");
+        $form->addSubmit("doClear", "Clear");
+        $form->onSuccess[] = function($f, $v) { $this->processSearch($f, $v); };
+        
+        return $form;
+    }
+    
+    
+    protected function processSearch(Form $form, $values) {
+        $query = $values->query;
+        
+        if ($form["doClear"]->isSubmittedBy()) {
+            $query = null;
+        }
+        
+        $this->redirect("this", array("query" => $query));
     }
 }

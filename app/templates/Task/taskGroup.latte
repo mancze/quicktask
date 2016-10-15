@@ -1,5 +1,22 @@
 {block content}
 {control insertTaskForm}
+
+{form searchTask}
+    <div class="row">
+        <div class="col-md-9">
+            <div class="form-group">
+                {label query /}
+                {input query, class => 'form-control'}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <br/>
+            {input doSubmit, class => 'btn btn-default'}
+            {input doClear, class => 'btn btn-default'}
+        </div>
+    </div>
+{/form}
+
 <div class="row">
     <div class="col-md-12">
         {snippet tasks}
@@ -29,7 +46,7 @@
                     </ul>
                 {/formContainer}
 
-                {input doSubmit}
+                {input doSubmit, class => 'btn btn-primary'}
             {/form}
         {/snippet}
     </div>
