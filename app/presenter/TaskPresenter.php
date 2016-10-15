@@ -80,12 +80,14 @@ class TaskPresenter extends BasePresenter
     }
     
     protected function onTaskAdded(Control $s, Task $t) {
+        $this->query = null;
         $this->flashMessage('Task was created.', 'success');
         
         if ($this->isAjax()) {
             // reload the tasks
             $this->loadTasks();
             $this->redrawControl("tasks");
+            $this->redrawControl("search");
         }
         else {
             $this->redirect("this");
@@ -176,9 +178,18 @@ class TaskPresenter extends BasePresenter
         $query = $values->query;
         
         if ($form["doClear"]->isSubmittedBy()) {
+            $form->setValues(array(), true);
             $query = null;
         }
         
-        $this->redirect("this", array("query" => $query));
+        if ($this->isAjax()) {
+            $this->query = $query;
+            $this->loadTasks();
+            $this->redrawControl("search");
+            $this->redrawControl("tasks");
+        }
+        else {
+            $this->redirect("this", array("query" => $query));
+        }
     }
 }

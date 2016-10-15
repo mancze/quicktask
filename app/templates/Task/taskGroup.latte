@@ -1,26 +1,28 @@
 {block content}
 {control insertTaskForm}
 
-{form searchTask}
-    <div class="row">
-        <div class="col-md-9">
-            <div class="form-group">
-                {label query /}
-                {input query, class => 'form-control'}
+{snippet search}
+    {form searchTask}
+        <div class="row">
+            <div class="col-md-9">
+                <div class="form-group">
+                    {label query /}
+                    {input query, class => 'form-control search-tasks-input'}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <br/>
+                {input doSubmit, class => 'btn btn-default'}
+                {input doClear, class => 'btn btn-default'}
             </div>
         </div>
-        <div class="col-md-3">
-            <br/>
-            {input doSubmit, class => 'btn btn-default'}
-            {input doClear, class => 'btn btn-default'}
-        </div>
-    </div>
-{/form}
+    {/form}
+{/snippet}
 
 <div class="row">
     <div class="col-md-12">
         {snippet tasks}
-            {form taskList class => "ajax"}
+            {form taskList, class => "ajax"}
                 <!-- Jednoduché vykreslení chyb -->
                 <ul class="errors" n:if="$form->hasErrors()">
                     <li n:foreach="$form->errors as $error">{$error}</li>
