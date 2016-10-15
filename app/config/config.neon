@@ -17,6 +17,7 @@ session:
 
 services:
     router: App\RouterFactory::createRouter
+    - App\Model\Repository\TaskCategoryRepository
     - App\Model\Repository\TaskGroupRepository
     - App\Model\Repository\TaskRepository
     - App\Factories\Modal\IInsertTaskGroupFactory

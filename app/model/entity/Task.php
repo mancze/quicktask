@@ -18,6 +18,12 @@ class Task extends BaseEntity
     protected $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TaskCategory")
+     * @ORM\JoinColumn(name="task_category_id", referencedColumnName="id", nullable=true)
+     */
+    protected $taskCategory;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TaskGroup")
      * @ORM\JoinColumn(name="task_group_id", referencedColumnName="id", nullable=false)
      */
@@ -44,6 +50,22 @@ class Task extends BaseEntity
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return TaskCategory|null
+     */
+    public function getTaskCategory()
+    {
+        return $this->taskCategory;
+    }
+
+    /**
+     * @param TaskCategory|null $taskCategory
+     */
+    public function setTaskCategory($taskCategory)
+    {
+        $this->taskCategory = $taskCategory;
     }
 
     /**
