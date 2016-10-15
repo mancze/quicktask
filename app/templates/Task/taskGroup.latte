@@ -3,15 +3,30 @@
     <div class="row">
         <div class="col-md-12">
             {snippet tasks}
-                <ul class="list-group">
-                    {foreach $tasks as $task}
-                        <li class="list-group-item">
-                            <input type="checkbox" />
-                            <span>{$task['name']}</span>
-                            <span class="label label-info">{$task['date']|date:'d.m.Y'}</span>
-                        </li>
-                    {/foreach}
-                </ul>
+                {form taskList}
+                    <!-- Jednoduché vykreslení chyb -->
+                    <ul class="errors" n:if="$form->hasErrors()">
+                        <li n:foreach="$form->errors as $error">{$error}</li>
+                    </ul>
+                    
+                    {formContainer tasks}
+                        <ul class="list-group">
+                        {foreach $formContainer->getComponents() as $taskContainer}
+                            {formContainer $taskContainer->getName()}
+                                <li class="list-group-item">
+                                    {var $task = $taskContainer["completed"]->getOption("task")}
+
+                                    {input completed:}
+                                    <span>{$task->getName()}</span>
+                                    <span class="label label-info">{$task->getDate()|date:'d.m.Y'}</span>
+                                </li>
+                            {/formContainer}
+                        {/foreach}
+                        </ul>
+                    {/formContainer}
+                        
+                    {input doSubmit}
+                {/form}
             {/snippet}
         </div>
     </div>

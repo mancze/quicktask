@@ -1,5 +1,8 @@
 <?php
+
 namespace App\Presenters;
+
+use Nette\Application\UI\Form;
 
 /**
  * Class TaskPresenter
@@ -17,6 +20,8 @@ class TaskPresenter extends BasePresenter
     public $insertTaskFactory;
     /** @var number */
     protected $idTaskGroup;
+    /** @var Task[] */
+    protected $tasks;
 
     public function renderDefault()
     {
@@ -39,10 +44,9 @@ class TaskPresenter extends BasePresenter
     /**
      * @param number $idTaskGroup
      */
-    public function renderTaskGroup($idTaskGroup)
+    public function actionTaskGroup($idTaskGroup)
     {
-        $this->idTaskGroup = $idTaskGroup;
-        $this->template->tasks = $this->getTasks($idTaskGroup);
+        $this->loadTasks($idTaskGroup);
     }
 
     /**
@@ -81,21 +85,38 @@ class TaskPresenter extends BasePresenter
     }
 
     /**
+     * Loads the list of tasks for given group.
      * @param number $idTaskGroup
-     * @return array
+     * @return void
      */
-    protected function getTasks($idTaskGroup)
+    protected function loadTasks($idTaskGroup)
     {
-        $result = array();
-        $tasks = $this->taskRepository->getByTaskGroup($idTaskGroup, array("date" => "DESC"));
+        $this->idTaskGroup = $idTaskGroup;
+        $this->tasks = $this->taskRepository->getByTaskGroup($idTaskGroup, array("date" => "DESC"));
+    }
+
+    protected function processTaskList(Form $form)
+    {
+        throw new \Nette\NotImplementedException();
+    }
+
+    protected function createComponentTaskList()
+    {
+        $form = new Form();
+
+        $tasks = $this->tasks;
+        $tasksContainer = $form->addContainer("tasks");
+
         foreach ($tasks as $task) {
-            $item = array();
-            $item['id'] = $task->getId();
-            $item['date'] = $task->getDate();
-            $item['name'] = $task->getName();
-            $item['completed'] = $task->getCompleted();
-            $result[] = $item;
+            $taskContainer = $tasksContainer->addContainer($task->getId());
+            $taskContainer->addCheckbox("completed", $task->getName())
+                    ->setDefaultValue($task->getCompleted())
+                    ->setOption("task", $task);
         }
-        return $result;
+
+        $form->addSubmit("doSubmit", "Save");
+        $form->onSuccess[] = function($f) { $this->processTaskList($f); };
+
+        return $form;
     }
 }
