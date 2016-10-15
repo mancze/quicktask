@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Components\Form;
 
 use App\Model\Entity\Task;
@@ -10,9 +11,9 @@ use Nette\Application\UI\Form;
 
 class InsertTask extends Control
 {
-    /** @var TaskRepository*/
+    /** @var TaskRepository */
     public $taskRepository;
-    /** @var TaskGroupRepository*/
+    /** @var TaskGroupRepository */
     public $taskGroupRepository;
     /** @var number */
     public $idTaskGroup;
@@ -55,9 +56,13 @@ class InsertTask extends Control
             ->setRequired('Please fill task name');
         $form->addText('date', 'Date')
             ->setRequired('Please fill task date');
-        $form->addHidden('idTaskGroup', $this->idTaskGroup);
         $form->addSubmit('submit', 'Add');
-        $form->onSuccess[] = array($this, 'insertTaskFromSuccess');
+        $form->onSuccess[] = function($f, $v) {
+            $this->onSuccess($f, $v);
+        };
+        $form->onSubmit[] = function() {
+            $this->onSubmit();
+        };
         return $form;
     }
 
@@ -65,16 +70,25 @@ class InsertTask extends Control
      * @param Form $form
      * @param $values
      */
-    public function insertTaskFromSuccess(Form $form, $values)
+    public function onSuccess(Form $form, $values)
     {
-        $taskGroup = $this->taskGroupRepository->getById($values->idTaskGroup);
+        $taskGroup = $this->taskGroupRepository->getById($this->idTaskGroup);
 
         $taskEntity = new Task();
         $taskEntity->setName($values->name);
         $taskEntity->setDate($values->date);
         $taskEntity->setTaskGroup($taskGroup);
         $this->taskRepository->insert($taskEntity);
-        
+
+        // clear the form
+        $form->setValues(array(), true);
+
         $this->onTaskAdded($this, $taskEntity);
+    }
+
+    protected function onSubmit()
+    {
+        // invalidate
+        $this->redrawControl();
     }
 }

@@ -1,20 +1,22 @@
-{form insertTaskForm}
-    <div class="row">
-        <div class="col-md-7">
-            <div class="form-group">
-                {label name /}
-                {input name, class => 'form-control'}
+{snippet}
+    {form insertTaskForm}
+        <div class="row">
+            <div class="col-md-7">
+                <div class="form-group">
+                    {label name /}
+                    {input name, class => 'form-control'}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {label date /}
+                    {input date, class => 'form-control datepicker'}
+                </div>
+            </div>
+            <div class="col-md-2">
+                <br/>
+                {input submit, class => 'btn btn-primary'}
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                {label date /}
-                {input date, class => 'form-control datepicker'}
-            </div>
-        </div>
-        <div class="col-md-2">
-            <br/>
-            {input submit, class => 'btn btn-primary'}
-        </div>
-    </div>
-{/form}
+    {/form}
+{/snippet}
