@@ -2,6 +2,8 @@
 
 namespace App\Presenters;
 
+use App\Model\Entity\Task;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\Arrays;
 
@@ -65,8 +67,16 @@ class TaskPresenter extends BasePresenter
     protected function createComponentInsertTaskForm()
     {
         $control = $this->insertTaskFactory->create();
+        
         $control->setTaskGroupId($this->idTaskGroup);
+        $control->onTaskAdded[] = function($s, $t) { $this->onTaskAdded($s, $t); };
+        
         return $control;
+    }
+    
+    protected function onTaskAdded(Control $s, Task $t) {
+        $this->flashMessage('Task was created.', 'success');
+        $this->redirect("this");
     }
 
     /**

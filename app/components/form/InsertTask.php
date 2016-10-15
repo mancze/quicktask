@@ -16,6 +16,8 @@ class InsertTask extends Control
     public $taskGroupRepository;
     /** @var number */
     public $idTaskGroup;
+    /** @var callable[] function(Control $sender, Task $task) */
+    public $onTaskAdded;
 
     /**
      * @param TaskRepository $taskRepository
@@ -72,7 +74,7 @@ class InsertTask extends Control
         $taskEntity->setDate($values->date);
         $taskEntity->setTaskGroup($taskGroup);
         $this->taskRepository->insert($taskEntity);
-        $this->presenter->flashMessage('Task was created', 'success');
-        $this->redirect('this');
+        
+        $this->onTaskAdded($this, $taskEntity);
     }
 }
