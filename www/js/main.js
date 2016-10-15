@@ -14,6 +14,9 @@ function submitForm(formEl) {
 }
 
 function subscribeHandlers(where) {
+    $(where).find("input").iCheck({
+        checkboxClass: 'icheckbox_square-blue'
+    });
     $(where).find('.datepicker').datepicker({
         orientation: 'left bottom'
     });
