@@ -33,7 +33,17 @@
 {/block}
 
 {block scripts}
-    {include parent}
+{include parent}
+<script>
+    $.nette.ext('select-onchange', {
+        load: function () {
+            $('ul.list-group li.list-group-item input[type=checkbox]').change(function (e) {
+                $(this).closest('form').submit();
+                return false;
+            });
+        }
+    });
+</script>
 {/block}
 
 {block head}
